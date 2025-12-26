@@ -34,7 +34,7 @@ Uso
 
 Desde la terminal, navega a la carpeta donde está t1.py y ejecuta:
 
-python t1.py [OPCIONES]
+python terminal.py [OPCIONES]
 
 
 -p / --puerto: (opcional) Puerto en el que escuchar (por defecto: 7654).
