@@ -1,87 +1,75 @@
-🚀 Web Terminal Server
+Terminal Remota Web (Tornado + Xterm.js)
 
-Un servidor de terminal ligero basado en web que permite el acceso remoto a una shell de Linux (Bash) a través de cualquier navegador moderno. Ideal para administración remota rápida y entornos de pruebas.
+Este programa es un emulador de terminal basado en web que permite ejecutar una sesión de bash directamente en el navegador. Utiliza WebSockets para una comunicación en tiempo real, permitiendo controlar tu servidor de forma remota a través de una interfaz moderna y fluida.
 
-🛠️ Tecnologías utilizadas
+Características
 
-Backend: Python 3 con Tornado Web Server.
+Terminal Funcional: Proporciona una sesión de shell completa (/bin/bash) con soporte para colores y caracteres especiales.
 
-Frontend: xterm.js para una emulación de terminal fiel y rápida.
+Redimensionamiento Automático: La terminal se ajusta dinámicamente al tamaño de la ventana del navegador mediante el complemento FitAddon.
 
-Protocolo: WebSockets para comunicación bidireccional en tiempo real.
+Auto-instalable: Descarga automáticamente las librerías necesarias de xterm.js desde un CDN si no existen localmente.
 
-PTY: Emulación de pseudo-terminal nativa de Unix.
+Interfaz Moderna: Estética oscura basada en la consola tradicional con soporte para enlaces web interactivos.
 
-✨ Características
+Multisistema: Muestra la URL de acceso local y de red para conectar otros dispositivos fácilmente.
 
-💻 Acceso Total: Shell Bash completa con soporte para 256 colores.
+Optimizado: Usa el framework Tornado para manejar múltiples conexiones de forma asíncrona y eficiente.
 
-🔄 Conexión WebSocket: Latencia ultra baja.
+Requisitos
 
-📏 Auto-ajuste: Soporte para redimensionamiento dinámico de la terminal (FitAddon).
+Python 3.x
 
-🔗 Links Clickables: Detección automática de URLs en la terminal.
+Sistemas Unix: Requiere Linux o macOS (debido al uso de los módulos pty y fcntl nativos de Unix).
 
-📦 Zero Config: Descarga automáticamente sus dependencias de frontend al iniciar.
+Tornado:
 
-📋 Requisitos Previos
-
-Sistema Operativo
-
-Unix-like: Linux, macOS o WSL (Windows Subsystem for Linux).
-
-Nota: No es compatible con Windows nativo debido al uso de pty y fcntl.
-
-Dependencias de Python
-
-Instala la librería necesaria mediante pip:
+Instala con:
 
 pip install tornado
 
 
-🚀 Instalación y Uso
+Uso
 
-Clona este repositorio o descarga el script:
+Desde la terminal, navega a la carpeta donde está t1.py y ejecuta:
 
-git clone [https://github.com/tu-usuario/nombre-repo.git](https://github.com/tu-usuario/nombre-repo.git)
-cd nombre-repo
-
-
-Ejecuta el servidor:
-
-python3 terminal.py
+python t1.py [OPCIONES]
 
 
-Parámetros opcionales:
-Puedes especificar un puerto diferente usando -p o --puerto:
+-p / --puerto: (opcional) Puerto en el que escuchar (por defecto: 7654).
 
-python3 terminal.py --puerto 8080
+Ejemplos
 
+Python
 
-Acceso:
-Abre tu navegador en la dirección que se muestra en la consola (normalmente http://localhost:7654).
-
-📂 Estructura del Proyecto
-
-.
-├── terminal.py         # Script principal (Servidor + Lógica)
-├── README.md           # Documentación
-└── recursos_web/       # Cache local de xterm.js (generado automáticamente)
+# Usando el programa de python
+python terminal.py
+python terminal.py --puerto 8080
+python terminal.py --help
 
 
-🔒 Seguridad
+Opciones
 
-[!CAUTION]
-ADVERTENCIA DE SEGURIDAD: Este software expone una shell con privilegios de usuario a la red.
+-h, --help: Muestra el menú de ayuda y sale.
 
-No lo expongas directamente a Internet.
+-p, --puerto: Especifica el puerto TCP para el servidor.
 
-Úsalo solo en redes locales de confianza.
+Acceso
 
-Para uso remoto, se recomienda utilizar un túnel SSH, una VPN o un proxy inverso con autenticación fuerte.
+Al iniciar el programa, aparecerá un banner en la terminal con la información de conexión, por ejemplo:
 
-📄 Licencia
+http://localhost:7654/ o http://192.168.1.100:7654/
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+Abre tu navegador preferido y accede para obtener el control de la consola.
 
-Generado con ❤️ para administradores de sistemas y desarrolladores.
+Seguridad
+
+No utilices este servidor en entornos públicos o inseguros.
+
+Otorga acceso total a la terminal del sistema sin autenticación por defecto.
+
+Se recomienda usar bajo una VPN o un túnel SSH seguro.
+
+Créditos
+
+Programa creado por: JAAM
