@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terminal Web</title>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #000;
+            color: #00ff00; /* Color verde hacker */
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #terminal-container {
+            width: 100%;
+            height: 100vh;
+            padding: 10px;
+            box-sizing: border-box;
+            display: none;
+        }
+        #auth-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: fadeIn 0.5s ease;
+        }
+        #auth-message {
+            color: #f55;
+            margin-top: 10px;
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px; /* Aumentar tamaño de fuente */
+            color: #00ff00;
+            background: #222;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+        input[type="password"]:focus {
+            border-color: #f55;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            color: #fff;
+            background: #00ff00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #f55;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const authContainer = document.getElementById('auth-container');
+            const terminalContainer = document.getElementById('terminal-container');
+            const passwordInput = document.getElementById('password-input');
+            const authButton = document.getElementById('auth-button');
+            const authMessage = document.getElementById('auth-message');
+            
+            let sessionId = sessionStorage.getItem('terminal_session_id'); // Cambiar a sessionStorage
+            if (!sessionId) {
+                sessionId = crypto.randomUUID();
+                sessionStorage.setItem('terminal_session_id', sessionId);
+            }
+            
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const ws = new WebSocket(`${protocol}//${window.location.host}/ws?session_id=${sessionId}`);
+            
+            ws.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+                
+                if (msg.type === 'auth') {
+                    if (msg.status === 'required') {
+                        authContainer.style.display = 'block';
+                    } 
+                    else if (msg.status === 'success') {
+                        authContainer.style.display = 'none';
+                        terminalContainer.style.display = 'block';
+                        initTerminal();
+                    }
+                    else if (msg.status === 'failed') {
+                        authMessage.textContent = msg.message || 'Autenticación fallida';
+                    }
+                }
+                else if (msg.type === 'data' && terminal) {
+                    terminal.write(msg.data);
+                }
+            };
+            
+            authButton.addEventListener('click', () => {
+                const password = passwordInput.value.trim();
+                if (password) {
+                    ws.send(JSON.stringify({
+                        type: 'auth',
+                        password: password
+                    }));
+                }
+            });
+            
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    authButton.click();
+                }
+            });
+            
+            let terminal;
+            function initTerminal() {
+                terminal = new Terminal();
+                terminal.open(terminalContainer);
+                
+                terminal.onData(data => {
+                    ws.send(JSON.stringify({
+                        type: 'data',
+                        data: data
+                    }));
+                });
+                
+                terminal.onResize(size => {
+                    ws.send(JSON.stringify({
+                        type: 'resize',
+                        rows: size.rows,
+                        cols: size.cols
+                    }));
+                });
+                
+                terminal.focus();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="auth-container" style="display: none;">
+        <h2>Acceso Terminal</h2>
+        <input type="password" id="password-input" placeholder="Contraseña">
+        <button id="auth-button">Acceder</button>
+        <div id="auth-message"></div>
+    </div>
+    <div id="terminal-container"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.1.0/lib/xterm.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.1.0/css/xterm.min.css">
+</body>
+</html>
