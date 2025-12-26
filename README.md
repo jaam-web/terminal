@@ -1,4 +1,4 @@
-https://github.com/jaam-web/terminal/blob/39ed284d3217b92825d5dc1d9e81671a36035a36/Screenshot.jpg
+![f06037b5-234a-4901-aa76-e43806b39849](https://github.com/jaam-web/terminal/blob/39ed284d3217b92825d5dc1d9e81671a36035a36/Screenshot.jpg)
 Terminal Remota Web (Tornado + Xterm.js)
 
 Este programa es un emulador de terminal basado en web que permite ejecutar una sesión de bash directamente en el navegador. Utiliza WebSockets para una comunicación en tiempo real, permitiendo controlar tu servidor de forma remota a través de una interfaz moderna y fluida.
